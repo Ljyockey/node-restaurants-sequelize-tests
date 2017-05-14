@@ -52,3 +52,13 @@ router.put('/:id', (req, res) => {
 	.then(grade => res.status(204).end())
 	.catch(err => res.status(500).json({message: 'internal server error'}));
 });
+
+router.delete('/:id', (req, res) => {
+	return Grade.destroy({
+		where: {
+			id: req.params.id
+		}
+	})
+	.then(grade => res.status(204).end())
+	.catch(err => res.status(500).send({message: 'internal server error'}));
+})
