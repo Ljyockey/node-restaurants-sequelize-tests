@@ -93,6 +93,8 @@ describe('Grades API resource', function() {
         })
         .then(res => {
           res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have.keys('grade', 'score', 'id', 'inspectionDate');
         });
     });
   });
@@ -115,7 +117,12 @@ describe('Grades API resource', function() {
         })
         then(res => {
           res.should.have.status(204);
+          return Grade.findById(toUpdate.id)
         })
+        .then(function(grade) {
+          grade.grade.should.equal(toUpdate.grade);
+          grade.score.should.equal(toUpdate.score);
+        });
     });
   });
 
