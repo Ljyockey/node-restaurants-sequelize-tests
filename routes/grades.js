@@ -1,17 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const {Restaurant, Grade} = require('../models');
+const {Grade} = require('../models');
 
-router.get('/:id', (req, res) => Grade.findById(req.params.id, {
-	include: [{
-		model: Restaurant,
-		as: 'restaurant'}]
-})
-.then(grades => res.json({
-	grades: grades.map(grades => grades.apiRepr())
-}))
-);
+router.get('/:id', (req, res) => {
+	return Grade
+	.findById(req.params.id)
+	.then(grade => res.json(grade.apiRepr()));
+});
 
 router.post('/', (req, res) => {
 	const requiredFields = ['grade', 'inspectionDate', 'score', 'restaurant_id'];
@@ -34,7 +30,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-	if (req.params.id !== req.body.id) {
+	if (req.params.id !== req.body.id.toString()) {
 		const message = 'req.params.id and req.body.id must match';
 		console.error(message);
 		res.status(400).send(message);
@@ -62,3 +58,5 @@ router.delete('/:id', (req, res) => {
 	.then(grade => res.status(204).end())
 	.catch(err => res.status(500).send({message: 'internal server error'}));
 })
+
+module.exports = router;
